@@ -18,13 +18,11 @@ type API interface {
 
 // Client represents a RapidAPI client
 //
-// APIKey should contain the RapidAPI API Key
-// If Hostname is set, it will be used to construct the URL and fill in the x-rapidapi-host header field.
-// For unit tests, set the URL field and ignore the Hostname field.
+// For unit tests, set the URL field. This will ignore the hostname field.
 type Client struct {
-	Hostname   string
 	URL        string
-	APIKey     string
+	hostname   string
+	apiKey     string
 	httpClient *http.Client
 }
 
@@ -32,8 +30,8 @@ type Client struct {
 func New(hostname, apiKey string) *Client {
 	return &Client{
 		httpClient: http.DefaultClient,
-		Hostname:   hostname,
-		APIKey:     apiKey,
+		hostname:   hostname,
+		apiKey:     apiKey,
 	}
 }
 
@@ -49,7 +47,7 @@ func (client *Client) Call(endpoint string) (body []byte, err error) {
 }
 
 func (client Client) makeURL(endpoint string) string {
-	baseURL := "https://" + client.Hostname
+	baseURL := "https://" + client.hostname
 	if client.URL != "" {
 		baseURL = client.URL
 	}
@@ -95,8 +93,8 @@ func (client *Client) CallWithContext(ctx context.Context, endpoint string) (bod
 
 func (client *Client) call(ctx context.Context, url string) (body []byte, err error) {
 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	req.Header.Add("x-rapidapi-key", client.APIKey)
-	req.Header.Add("x-rapidapi-host", client.Hostname)
+	req.Header.Add("x-rapidapi-key", client.apiKey)
+	req.Header.Add("x-rapidapi-host", client.hostname)
 
 	var resp *http.Response
 	resp, err = client.httpClient.Do(req)
