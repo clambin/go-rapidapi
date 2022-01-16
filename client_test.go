@@ -1,15 +1,14 @@
 package rapidapi_test
 
 import (
-	"github.com/clambin/gotools/rapidapi/stub"
+	"github.com/clambin/go-rapidapi"
+	"github.com/clambin/go-rapidapi/stub"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"github.com/clambin/gotools/rapidapi"
 )
 
 func TestClient_Call(t *testing.T) {
